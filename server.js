@@ -12,26 +12,26 @@ app.use(bodyParser.json())
 
 ///socketManager=require('./SocketManager.js');
 
+
 test = '9001';
-
-
-joshua = {programer: true, age: 18, favoriteIceCream: "pizza flavour"};
-
-console.log(joshua.favoriteIceCream);
-
 
 app.get('/', function (req, res) {
     //res.render('main');
-    res.send(test)
+    res.send({thing: 'hi'})
     console.log(test);
 })
+
+
+function test(var1,var2){
+    console.log("cool");
+}
 
 app.post('/robotData', function(req,res){
     res.send("cool");
     //test=req.body.temperature;
     //console.log(req.body)
-    console.log("the robot is "+req.body.temperature
-    +"\nand is at battery "+req.body.battery)
+    console.log("\nthe robot is "+req.body.name
+    +"\nand is at battery "+req.body.password)
 })
 
 
