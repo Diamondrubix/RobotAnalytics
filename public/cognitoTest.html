@@ -42,7 +42,8 @@ some text to show the webpage
         <br>Repeat Password</br></label>
         <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
         <br>
-        <input type="button" value="signUp" onclick="makeCorsRequest();">
+        <input type="button" value="login" onclick="login();">
+        <input type="button" value="makeRequest" onclick="makeCorsRequest();">
     </div>
 </form>
 
@@ -55,6 +56,7 @@ some text to show the webpage
     userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     */
     hold = {}
+    idToken = "eyJraWQiOiJqRlBwaUUwY3lBeGZQVjJ6MUJoSHYzbzdBNjRaRCt1V0lkTTlHODhWNm9vPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIwMWZkZGFiMC1hY2IyLTQzY2MtYjgyZi1mOTYwYjYwYmE4Y2QiLCJhdWQiOiI2dWtwcmpqc2c5amZiNzZubnFyNzFmZXA0ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1MTk5MjAzNjEsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX2NUOTVoRjdWdSIsImNvZ25pdG86dXNlcm5hbWUiOiJBZGFtIiwiZXhwIjoxNTE5OTIzOTYxLCJpYXQiOjE1MTk5MjAzNjEsImVtYWlsIjoiYXJhdG9hZEBnbWFpbC5jb20ifQ.lSDo_XTy3QttYiW0W3FI7O5KeJm-we4nqnBBv2VRx2_136szF8QaGnUJp7wsgt68HgCNnW-bUzfVyWLPJDdxI-POxUans96JH1rtYDMNonS8s3NQrCvCLUVWjjcznxpnKrdYRyEumKYCpMIXkPC_zI6-RNCXyHq7omiy4M4rkw5Lu_4MX1EbyO4NWGaZ3Yu8WkCKL-eqy2fytkFvBBqigKL5Swrjcfi18QLNGOZHuIqn5kYQ4UBshHTKZmOcWzjdQ_-IpMVAQXidPsmlp_CtwNkIrcDzi1lHNi6VzDbRByuB29W09iIi53CQTPeQSq9gVLUxA7OLkFkJ9-NyQGuk0w";
     // Create the XHR object.
     function createCORSRequest(method, url) {
         var xhr = new XMLHttpRequest();
@@ -103,10 +105,10 @@ some text to show the webpage
             alert('Woops, there was an error making the request.');
         };
         xhr.setRequestHeader(
-            "Authorization","eyJraWQiOiJqRlBwaUUwY3lBeGZQVjJ6MUJoSHYzbzdBNjRaRCt1V0lkTTlHODhWNm9vPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIwMWZkZGFiMC1hY2IyLTQzY2MtYjgyZi1mOTYwYjYwYmE4Y2QiLCJhdWQiOiI2dWtwcmpqc2c5amZiNzZubnFyNzFmZXA0ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1MTk4NjkzMzQsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX2NUOTVoRjdWdSIsImNvZ25pdG86dXNlcm5hbWUiOiJBZGFtIiwiZXhwIjoxNTE5ODcyOTM0LCJpYXQiOjE1MTk4NjkzMzQsImVtYWlsIjoiYXJhdG9hZEBnbWFpbC5jb20ifQ.KiXijaQfIhHdGwEWyj7gjCc6MJ8lWuSD8sx26qu8fmFHb2cmSCCxuopkB-1LXCvzy-QvdnlR-vLYrqoum8A_rh0cwHKdTfvmJKOz94wuUmJBshMX8c8OIq1jxLJ4Jt1l-qXWUJrGHGYTkcZUrXa9OW6uhxhGDp88YdSOJ28CA0cBuhGs0CvsGsjnTC7PfKhFshNGT2hfei0wqdgMNUafft4S9t3zd6cJIzCuykq_Idiu76zEmAys0ZX0-Q_MC-j__JZfdWWpcTBZhG5iDgi205Gq1VpGMTCc7HQTIaVQcTUrO_Plj_kUS04NrejgS0ZnOaAPEPp4F3erdCbto392cw"   //If your header name has spaces or any other char not appropriate
+            "Authorization", idToken   //If your header name has spaces or any other char not appropriate
         );
 
-        xhr.send();
+        xhr.send('sup');
     }
 
     function test(){
@@ -146,7 +148,7 @@ some text to show the webpage
                 access_token: 'XXXXXXXXXXXXXXXXXXX'
             },
             headers: {
-                "Authorization": "eyJraWQiOiJqRlBwaUUwY3lBeGZQVjJ6MUJoSHYzbzdBNjRaRCt1V0lkTTlHODhWNm9vPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIwMWZkZGFiMC1hY2IyLTQzY2MtYjgyZi1mOTYwYjYwYmE4Y2QiLCJhdWQiOiI2dWtwcmpqc2c5amZiNzZubnFyNzFmZXA0ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1MTk4NjkzMzQsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX2NUOTVoRjdWdSIsImNvZ25pdG86dXNlcm5hbWUiOiJBZGFtIiwiZXhwIjoxNTE5ODcyOTM0LCJpYXQiOjE1MTk4NjkzMzQsImVtYWlsIjoiYXJhdG9hZEBnbWFpbC5jb20ifQ.KiXijaQfIhHdGwEWyj7gjCc6MJ8lWuSD8sx26qu8fmFHb2cmSCCxuopkB-1LXCvzy-QvdnlR-vLYrqoum8A_rh0cwHKdTfvmJKOz94wuUmJBshMX8c8OIq1jxLJ4Jt1l-qXWUJrGHGYTkcZUrXa9OW6uhxhGDp88YdSOJ28CA0cBuhGs0CvsGsjnTC7PfKhFshNGT2hfei0wqdgMNUafft4S9t3zd6cJIzCuykq_Idiu76zEmAys0ZX0-Q_MC-j__JZfdWWpcTBZhG5iDgi205Gq1VpGMTCc7HQTIaVQcTUrO_Plj_kUS04NrejgS0ZnOaAPEPp4F3erdCbto392cw"   //If your header name has spaces or any other char not appropriate
+                "Authorization": idToken   //If your header name has spaces or any other char not appropriate
             },
             dataType: 'json',
             success: function (data) {
@@ -194,6 +196,8 @@ some text to show the webpage
             onSuccess: (result) => {
                 hold = result;
                 console.log(cognitoUser);
+                idToken = cognitoUser.signInUserSession.idToken.jwtToken
+                //console.log("\n"+idToken)
                 var apigClient = apigClientFactory.newClient({
                     sessionToken: 'SESSION_TOKEN', //OPTIONAL: If you are using temporary credentials you must include the session token
                     region: 'eu-west-1' // OPTIONAL: The region where the API is deployed, by default this parameter is set to us-east-1
