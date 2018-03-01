@@ -42,7 +42,7 @@ some text to show the webpage
         <br>Repeat Password</br></label>
         <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
         <br>
-        <input type="button" value="signUp" onclick="postTest();">
+        <input type="button" value="signUp" onclick="makeCorsRequest();">
     </div>
 </form>
 
@@ -55,28 +55,58 @@ some text to show the webpage
     userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     */
     hold = {}
+    // Create the XHR object.
     function createCORSRequest(method, url) {
         var xhr = new XMLHttpRequest();
         if ("withCredentials" in xhr) {
-
-            // Check if the XMLHttpRequest object has a "withCredentials" property.
-            // "withCredentials" only exists on XMLHTTPRequest2 objects.
+            // XHR for Chrome/Firefox/Opera/Safari.
             xhr.open(method, url, true);
-
         } else if (typeof XDomainRequest != "undefined") {
-
-            // Otherwise, check if XDomainRequest.
-            // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+            // XDomainRequest for IE.
             xhr = new XDomainRequest();
             xhr.open(method, url);
-
         } else {
-
-            // Otherwise, CORS is not supported by the browser.
+            // CORS not supported.
             xhr = null;
-
         }
         return xhr;
+    }
+
+    // Helper method to parse the title tag from the response.
+    function getTitle(text) {
+        return text.match('<title>(.*)?</title>');
+    }
+
+    // Make the actual CORS request.
+    function makeCorsRequest() {
+        console.log('yo')
+        // This is a sample server that supports CORS.
+        var url = 'https://2eazmkpt54.execute-api.us-east-1.amazonaws.com/beta';
+        //var url = 'http://html5rocks-cors.s3-website-us-east-1.amazonaws.com/index.html';
+
+        var xhr = createCORSRequest('POST', url);
+        if (!xhr) {
+            alert('CORS not supported');
+            return;
+        }
+
+        // Response handlers.
+        xhr.onload = function() {
+            var text = xhr.responseText;
+            var title = getTitle(text);
+            console.log('header is '+title);
+            console.log('body is '+ xhr.response);
+            //alert('Response from CORS request to ' + url + ': ' + title);
+        };
+
+        xhr.onerror = function() {
+            alert('Woops, there was an error making the request.');
+        };
+        xhr.setRequestHeader(
+            "Authorization","eyJraWQiOiJqRlBwaUUwY3lBeGZQVjJ6MUJoSHYzbzdBNjRaRCt1V0lkTTlHODhWNm9vPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIwMWZkZGFiMC1hY2IyLTQzY2MtYjgyZi1mOTYwYjYwYmE4Y2QiLCJhdWQiOiI2dWtwcmpqc2c5amZiNzZubnFyNzFmZXA0ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1MTk4NjkzMzQsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX2NUOTVoRjdWdSIsImNvZ25pdG86dXNlcm5hbWUiOiJBZGFtIiwiZXhwIjoxNTE5ODcyOTM0LCJpYXQiOjE1MTk4NjkzMzQsImVtYWlsIjoiYXJhdG9hZEBnbWFpbC5jb20ifQ.KiXijaQfIhHdGwEWyj7gjCc6MJ8lWuSD8sx26qu8fmFHb2cmSCCxuopkB-1LXCvzy-QvdnlR-vLYrqoum8A_rh0cwHKdTfvmJKOz94wuUmJBshMX8c8OIq1jxLJ4Jt1l-qXWUJrGHGYTkcZUrXa9OW6uhxhGDp88YdSOJ28CA0cBuhGs0CvsGsjnTC7PfKhFshNGT2hfei0wqdgMNUafft4S9t3zd6cJIzCuykq_Idiu76zEmAys0ZX0-Q_MC-j__JZfdWWpcTBZhG5iDgi205Gq1VpGMTCc7HQTIaVQcTUrO_Plj_kUS04NrejgS0ZnOaAPEPp4F3erdCbto392cw"   //If your header name has spaces or any other char not appropriate
+        );
+
+        xhr.send();
     }
 
     function test(){
@@ -109,9 +139,6 @@ some text to show the webpage
     }
 
     function postTest(){
-
-        
-        console.log("postTest running")
         $.ajax({
             url: 'https://2eazmkpt54.execute-api.us-east-1.amazonaws.com/beta',
             type: 'post',
@@ -119,7 +146,7 @@ some text to show the webpage
                 access_token: 'XXXXXXXXXXXXXXXXXXX'
             },
             headers: {
-                "Authorization": "eyJraWQiOiJqRlBwaUUwY3lBeGZQVjJ6MUJoSHYzbzdBNjRaRCt1V0lkTTlHODhWNm9vPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIwMWZkZGFiMC1hY2IyLTQzY2MtYjgyZi1mOTYwYjYwYmE4Y2QiLCJhdWQiOiI2dWtwcmpqc2c5amZiNzZubnFyNzFmZXA0ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1MTk4NjU1MTUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX2NUOTVoRjdWdSIsImNvZ25pdG86dXNlcm5hbWUiOiJBZGFtIiwiZXhwIjoxNTE5ODY5MTE1LCJpYXQiOjE1MTk4NjU1MTUsImVtYWlsIjoiYXJhdG9hZEBnbWFpbC5jb20ifQ.a4jrgPTr_SQslWMT6XCA4gfiM6CtZIUCW_YO2DCqYLXQaaaZ-D2Yv1kY5RFrpooAykQqbRfgbOigs2IzjjmbywGmmlRXj4HZPjK5-DUMNTkoe57SaNfzk_I4qIFfZv_9rQOndrao59BrFikm7OguBpzON3d7h7zFPFu7cxNDw3jmAuOi1rxmQOFz11TByc2x9-D63Kvn5bNGVIbYajwl8FRWXN5qz5Qz9bM_HvY9PqasfrUoioGGxvEJ-bss6fFdRRyS-YPzu2RimonXmDhlktagIyk0ZeT5WUv8rJKHp_ZJ5DVCu9H81Cs_uydHnahLNEbByX5KjLQJsxEWifguHw"   //If your header name has spaces or any other char not appropriate
+                "Authorization": "eyJraWQiOiJqRlBwaUUwY3lBeGZQVjJ6MUJoSHYzbzdBNjRaRCt1V0lkTTlHODhWNm9vPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIwMWZkZGFiMC1hY2IyLTQzY2MtYjgyZi1mOTYwYjYwYmE4Y2QiLCJhdWQiOiI2dWtwcmpqc2c5amZiNzZubnFyNzFmZXA0ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1MTk4NjkzMzQsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX2NUOTVoRjdWdSIsImNvZ25pdG86dXNlcm5hbWUiOiJBZGFtIiwiZXhwIjoxNTE5ODcyOTM0LCJpYXQiOjE1MTk4NjkzMzQsImVtYWlsIjoiYXJhdG9hZEBnbWFpbC5jb20ifQ.KiXijaQfIhHdGwEWyj7gjCc6MJ8lWuSD8sx26qu8fmFHb2cmSCCxuopkB-1LXCvzy-QvdnlR-vLYrqoum8A_rh0cwHKdTfvmJKOz94wuUmJBshMX8c8OIq1jxLJ4Jt1l-qXWUJrGHGYTkcZUrXa9OW6uhxhGDp88YdSOJ28CA0cBuhGs0CvsGsjnTC7PfKhFshNGT2hfei0wqdgMNUafft4S9t3zd6cJIzCuykq_Idiu76zEmAys0ZX0-Q_MC-j__JZfdWWpcTBZhG5iDgi205Gq1VpGMTCc7HQTIaVQcTUrO_Plj_kUS04NrejgS0ZnOaAPEPp4F3erdCbto392cw"   //If your header name has spaces or any other char not appropriate
             },
             dataType: 'json',
             success: function (data) {
