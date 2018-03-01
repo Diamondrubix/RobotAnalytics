@@ -42,7 +42,7 @@ some text to show the webpage
         <br>Repeat Password</br></label>
         <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
         <br>
-        <input type="button" value="signUp" onclick="login();">
+        <input type="button" value="signUp" onclick="postTest();">
     </div>
 </form>
 
@@ -54,6 +54,30 @@ some text to show the webpage
     };
     userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     */
+    hold = {}
+    function createCORSRequest(method, url) {
+        var xhr = new XMLHttpRequest();
+        if ("withCredentials" in xhr) {
+
+            // Check if the XMLHttpRequest object has a "withCredentials" property.
+            // "withCredentials" only exists on XMLHTTPRequest2 objects.
+            xhr.open(method, url, true);
+
+        } else if (typeof XDomainRequest != "undefined") {
+
+            // Otherwise, check if XDomainRequest.
+            // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+
+        } else {
+
+            // Otherwise, CORS is not supported by the browser.
+            xhr = null;
+
+        }
+        return xhr;
+    }
 
     function test(){
         var t = document.getElementById("email").value;
@@ -82,6 +106,32 @@ some text to show the webpage
                 onFailure(err);
             }
         });
+    }
+
+    function postTest(){
+
+        
+        console.log("postTest running")
+        $.ajax({
+            url: 'https://2eazmkpt54.execute-api.us-east-1.amazonaws.com/beta',
+            type: 'post',
+            data: {
+                access_token: 'XXXXXXXXXXXXXXXXXXX'
+            },
+            headers: {
+                "Authorization": "eyJraWQiOiJqRlBwaUUwY3lBeGZQVjJ6MUJoSHYzbzdBNjRaRCt1V0lkTTlHODhWNm9vPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIwMWZkZGFiMC1hY2IyLTQzY2MtYjgyZi1mOTYwYjYwYmE4Y2QiLCJhdWQiOiI2dWtwcmpqc2c5amZiNzZubnFyNzFmZXA0ZiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE1MTk4NjU1MTUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX2NUOTVoRjdWdSIsImNvZ25pdG86dXNlcm5hbWUiOiJBZGFtIiwiZXhwIjoxNTE5ODY5MTE1LCJpYXQiOjE1MTk4NjU1MTUsImVtYWlsIjoiYXJhdG9hZEBnbWFpbC5jb20ifQ.a4jrgPTr_SQslWMT6XCA4gfiM6CtZIUCW_YO2DCqYLXQaaaZ-D2Yv1kY5RFrpooAykQqbRfgbOigs2IzjjmbywGmmlRXj4HZPjK5-DUMNTkoe57SaNfzk_I4qIFfZv_9rQOndrao59BrFikm7OguBpzON3d7h7zFPFu7cxNDw3jmAuOi1rxmQOFz11TByc2x9-D63Kvn5bNGVIbYajwl8FRWXN5qz5Qz9bM_HvY9PqasfrUoioGGxvEJ-bss6fFdRRyS-YPzu2RimonXmDhlktagIyk0ZeT5WUv8rJKHp_ZJ5DVCu9H81Cs_uydHnahLNEbByX5KjLQJsxEWifguHw"   //If your header name has spaces or any other char not appropriate
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log("yeah?");
+                console.info(data);
+            }
+        });
+        /*
+        $.post("https://2eazmkpt54.execute-api.us-east-1.amazonaws.com/beta", function(data, status){
+            alert("Data: " + data + "\nStatus: " + status);
+        });
+        */
     }
 
     function login(){
@@ -115,7 +165,12 @@ some text to show the webpage
 
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: (result) => {
+                hold = result;
                 console.log(cognitoUser);
+                var apigClient = apigClientFactory.newClient({
+                    sessionToken: 'SESSION_TOKEN', //OPTIONAL: If you are using temporary credentials you must include the session token
+                    region: 'eu-west-1' // OPTIONAL: The region where the API is deployed, by default this parameter is set to us-east-1
+                });
             },
             onFailure: (err) => {
                 console.log(err);
@@ -123,7 +178,12 @@ some text to show the webpage
         });
 
 
-        
+        var apigClient = apigClientFactory.newClient({
+            accessKey: 'ACCESS_KEY',
+            secretKey: 'SECRET_KEY',
+            sessionToken: 'SESSION_TOKEN', //OPTIONAL: If you are using temporary credentials you must include the session token
+            region: 'eu-west-1' // OPTIONAL: The region where the API is deployed, by default this parameter is set to us-east-1
+        });
 
     }
 
