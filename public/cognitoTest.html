@@ -33,19 +33,17 @@ some text to show the webpage
         <br>Email</br></label>
         <input type="text" placeholder="Enter Email" id="email" name="email" required>
 
-        <br>Email</br></label>
-        <input type="text" placeholder="Enter UserName" name="username" required>
+        <br>username</br></label>
+        <input type="text" placeholder="Enter UserName" id="username" name="username" required>
 
         <br>Password</br></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
-
-        <br>Repeat Password</br></label>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+        <input type="password" placeholder="Enter Password" id="password" name="psw" required>
         <br>
         <input type="button" value="login" onclick="login();">
         <input type="button" value="makeRequest" onclick="makeCorsRequest(1,function(body){
             secondary(body)
         });">
+        <p id="p1">please Sign In</p>
     </div>
 </form>
 
@@ -67,6 +65,7 @@ some text to show the webpage
                         clearInterval(inter)
                         console.log(ipAddress)
                         ec2IP = ipAddress
+                        document.getElementById("p1").innerHTML = ipAddress;
                     })
 
                 }
@@ -99,7 +98,7 @@ some text to show the webpage
     }
     // Make the actual CORS request.
     function makeCorsRequest(body, callback) {
-
+        document.getElementById("p1").innerHTML = "Starting your ec2 Instance!";
         // This is a sample server that supports CORS.
         var url = 'https://2eazmkpt54.execute-api.us-east-1.amazonaws.com/beta/ec2manipulation';
         //var url = 'http://html5rocks-cors.s3-website-us-east-1.amazonaws.com/index.html';
@@ -132,11 +131,6 @@ some text to show the webpage
         checkForIP = true;
     }
 
-    function test(){
-        var t = document.getElementById("email").value;
-        console.log(t)
-        sign
-    }
     function toUsername(email) {
         return email.replace('@', '-at-');
     }
@@ -161,13 +155,13 @@ some text to show the webpage
         });
     }
 
-
-    function login(){
-        var username = document.getElementById("username");
-        var password = document.getElementById("password");
-        email = "aratoad@gmail.com"
-        username = "Adam"
-        password = "Password123!"
+    function login() {
+        document.getElementById("p1").innerHTML = "Logging in, please wait";
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        //email = "aratoad@gmail.com"
+        //username = "Adam"
+        //password = "Password123!"
         var poolData = {
             UserPoolId : 'us-east-1_cT95hF7Vu', // Your user pool id here
             ClientId : '6ukprjjsg9jfb76nnqr71fep4f' // Your client id here
@@ -193,6 +187,7 @@ some text to show the webpage
 
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: (result) => {
+                document.getElementById("p1").innerHTML = "You are logged in";
                 hold = result;
                 console.log(cognitoUser);
                 idToken = cognitoUser.signInUserSession.idToken.jwtToken
@@ -203,6 +198,7 @@ some text to show the webpage
                 });
             },
             onFailure: (err) => {
+                document.getElementById("p1").innerHTML = "Login failed";
                 console.log(err);
             }
         });
@@ -221,9 +217,6 @@ some text to show the webpage
         var email = document.getElementById("email");
         var username = document.getElementById("username");
         var password = document.getElementById("password");
-        email = "aratoan@gmail.com"
-        username = "andras"
-        password = "Password12!"
 
         /*
         var poolData = {
